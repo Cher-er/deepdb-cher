@@ -36,6 +36,10 @@ if __name__ == '__main__':
     parser.add_argument('--incremental_learning_rate', type=int, default=0)
     parser.add_argument('--incremental_condition', type=str, default=None)
 
+    # ground truth
+    parser.add_argument('--aqp_ground_truth', action='store_true')
+    parser.add_argument('--cardinalities_ground_truth',  action='store_true')
+
     # evaluation
     parser.add_argument('--evaluate_aqp_queries', action='store_true')
     parser.add_argument('--ensemble_location', nargs='+')
@@ -113,6 +117,18 @@ if __name__ == '__main__':
                                  incremental_condition=args.incremental_condition)
         else:
             raise NotImplementedError
+
+    # Compute ground truth for AQP queries
+    if args.aqp_ground_truth:
+        from evaluation.aqp_evaluation import compute_ground_truth
+
+        compute_ground_truth(args.target_path, args.database_name, query_filename=args.query_file_location)
+
+    # Compute ground truth for Cardinality queries
+    if args.cardinalities_ground_truth:
+        from evaluation.cardinality_evaluation import compute_ground_truth
+
+        compute_ground_truth(args.query_file_location, args.target_path, args.database_name)
 
     # Read pre-trained ensemble and evaluate AQP queries
     if args.evaluate_aqp_queries:
