@@ -17,7 +17,7 @@ if __name__ == '__main__':
     # generate hdf
     parser.add_argument('--generate_hdf', action='store_true')
     parser.add_argument('--csv_delimiter', default=',')
-    parser.add_argument('--csv_path')
+    parser.add_argument('--csv_path', required=True)
     parser.add_argument('--hdf_path')
     parser.add_argument('--max_rows_per_hdf_file', type=int, default=sys.maxsize)
 
@@ -36,11 +36,25 @@ if __name__ == '__main__':
     parser.add_argument('--incremental_learning_rate', type=int, default=0)
     parser.add_argument('--incremental_condition', type=str, default=None)
 
+    # evaluation
+    parser.add_argument('--evaluate_aqp_queries', action='store_true')
+    parser.add_argument('--ensemble_location', nargs='+')
+    parser.add_argument('--query_file_location')
+    parser.add_argument('--target_path')
+    parser.add_argument('--ground_truth_file_location')
+    parser.add_argument('--rdc_spn_selection', action='store_true')
+    parser.add_argument('--max_variants', type=int, default=1)
+    parser.add_argument('--no_exploit_overlapping', action='store_true')
+    parser.add_argument('--no_merge_indicator_exp', action='store_true')
+    parser.add_argument('--confidence_intervals', action='store_true')
+
     # logging
     parser.add_argument('--log_level', type=int, default=logging.DEBUG,
                         help='DEBUG = 10, INFO = 20, WARNING = 30, ERROR = 40, CRITICAL = 50')
 
     args = parser.parse_args()
+    args.exploit_overlapping = not args.no_exploit_overlapping
+    args.merge_indicator_exp = not args.no_merge_indicator_exp
 
     # logging setting
     os.makedirs('logs', exist_ok=True)
@@ -99,5 +113,16 @@ if __name__ == '__main__':
                                  incremental_condition=args.incremental_condition)
         else:
             raise NotImplementedError
+
+    # Read pre-trained ensemble and evaluate AQP queries
+    if args.evaluate_aqp_queries:
+        from evaluation.aqp_evaluation import evaluate_aqp_queries
+
+        evaluate_aqp_queries(args.ensemble_location, args.query_file_location, args.target_path, schema,
+                             args.ground_truth_file_location, args.rdc_spn_selection, args.pairwise_rdc_path,
+                             max_variants=args.max_variants,
+                             merge_indicator_exp=args.merge_indicator_exp,
+                             exploit_overlapping=args.exploit_overlapping, min_sample_ratio=0, debug=True,
+                             show_confidence_intervals=args.confidence_intervals)
 
 
