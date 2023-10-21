@@ -51,6 +51,7 @@ if __name__ == '__main__':
     parser.add_argument('--no_exploit_overlapping', action='store_true')
     parser.add_argument('--no_merge_indicator_exp', action='store_true')
     parser.add_argument('--confidence_intervals', action='store_true')
+    parser.add_argument('--database_name')
 
     # logging
     parser.add_argument('--log_level', type=int, default=logging.DEBUG,
