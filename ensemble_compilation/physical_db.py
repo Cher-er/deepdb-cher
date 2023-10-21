@@ -6,7 +6,7 @@ from ensemble_compilation.utils import gen_full_join_query, print_conditions
 
 class DBConnection:
 
-    def __init__(self, db_user="postgres", db_password="postgres", db_host="localhost", db_port="5432", db="shopdb"):
+    def __init__(self, db_user="postgres", db_password="postgres", db_host="/tmp/", db_port="5432", db="shopdb"):
         self.db_user = db_user
         self.db_password = db_password
         self.db_host = db_host
