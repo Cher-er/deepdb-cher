@@ -17,7 +17,7 @@ if __name__ == '__main__':
     # generate hdf
     parser.add_argument('--generate_hdf', action='store_true')
     parser.add_argument('--csv_delimiter', default=',')
-    parser.add_argument('--csv_path')
+    parser.add_argument('--csv_path', required=True)
     parser.add_argument('--hdf_path')
     parser.add_argument('--max_rows_per_hdf_file', type=int, default=sys.maxsize)
 
